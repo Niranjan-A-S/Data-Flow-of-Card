@@ -1,0 +1,150 @@
+body {
+  margin: 0;
+  font-family: Inter, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+    Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-sans;
+  font-style: inter;
+  font-size: 10px;
+}
+
+.heading-container {
+  display: flex;
+  justify-content: center;
+  color: #4b7be5;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.form-container form {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 30vw;
+}
+
+form input,
+select {
+  height: 4vh;
+}
+
+form input,
+select,
+textarea {
+  border: solid black;
+  border-width: 0.1rem;
+  margin-bottom: 1rem;
+  outline: none;
+  font-size: 1rem;
+}
+
+::placeholder {
+  color: #b0b0b0;
+}
+
+form button {
+  align-self: flex-end;
+  background-color: #4b7be5;
+  color: white;
+  height: 5vh;
+  width: 100%;
+  border: none;
+  font-size: 1rem;
+}
+
+form button:hover {
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+}
+
+form select {
+  color: #b0b0b0;
+}
+
+.sort-container {
+  display: flex;
+  justify-content: center;
+  margin: 5rem;
+  font-size: 1rem;
+}
+
+.sort-select {
+  font-size: inherit;
+  height: 5vh;
+  width: 50vw;
+  align-self: center;
+}
+
+.requested-container,
+.in-progress-container,
+.completed-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cards-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.card-container {
+  padding: 1rem 0 1rem 0;
+  width: 25vw;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+}
+
+.requested-card-container {
+  background-color: #b8fff9;
+}
+
+.in-progress-card-container {
+  background-color: #f6ffa4;
+}
+
+.completed-card-container {
+  background-color: #b5fe86;
+}
+
+.display-card {
+  padding: 0rem 1rem 1rem 1rem;
+  margin: 1rem 0 1rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1rem;
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+    rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+  width: 18vw;
+}
+
+.display-requested-card-type {
+  border-left: #06ff00 solid;
+  border-width: 1vw;
+}
+.display-in-progress-card-type {
+  border-left: #4b7be5 solid;
+  border-width: 1vw;
+}
+.display-completed-card-type {
+  border-left: #ff1818 solid;
+  border-width: 1vw;
+}
+
+.display-card button,
+.display-card i {
+  border: none;
+  font-size: 2rem;
+  background-color: inherit;
+}
+
+.display-card button:hover {
+  cursor: pointer;
+}
+
+.dragging {
+  opacity: 0.5;
+}
