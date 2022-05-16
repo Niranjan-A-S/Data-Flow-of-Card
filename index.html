@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cards</title>
+    <title>Kanban Board</title>
     <link rel="stylesheet" href="styles.css" />
     <script
       src="https://kit.fontawesome.com/6b35fd54fc.js"
@@ -12,73 +12,97 @@
     ></script>
   </head>
   <body>
-    <div class="heading-container">
-      <h1>Card Details</h1>
-    </div>
-    <div class="form-container" id="formContainer">
-      <form class="card-form" id="cardForm">
-        <input
-          class="card-name"
-          id="cardName"
-          type="text"
-          placeholder="Name"
-          required
-        />
-        <textarea
-          class="card-description"
-          id="cardDescription"
-          placeholder="Describe your card..."
-          cols="30"
-          rows="4"
-        ></textarea>
-        <input
-          class="card-priority"
-          id="cardPriority"
-          type="number"
-          placeholder="Priority"
-          max="100"
-          min="1"
-          required
-        />
-        <select class="card-type" id="cardType" required>
-          <option value="">Type</option>
-          <option>Feature</option>
-          <option>Enhancement</option>
-          <option>Bug</option>
-        </select>
-        <button type="submit">Save</button>
-      </form>
-    </div>
-    <div class="sort-container">
-      <select id="sortCards" class="sort-select">
-        <option value="" disabled selected>Sort by Priority</option>
-        <option>High to Low</option>
-        <option>Low to High</option>
-      </select>
-    </div>
-    <div class="cards-container">
-      <div class="requested-container">
-        <h1>Requested</h1>
-        <div
-          class="requested-card-container card-container"
-          id="requestedCardContainer"
-        ></div>
+    <section id="container">
+      <div id="overlay"></div>
+      <div class="main-container">
+        <div class="heading-container">
+          <h1>Kanban Board</h1>
+        </div>
+        <div class="main-container-2">
+          <div class="add-task">
+            <button id="taskButton">+ Add Task</button>
+          </div>
+          <div class="sort-container">
+            <select id="sortCards" class="sort-select">
+              <option value="" disabled selected>Sort by Priority</option>
+              <option>High to Low</option>
+              <option>Low to High</option>
+            </select>
+          </div>
+        </div>
       </div>
-      <div class="in-progress-container">
-        <h1>In-progress</h1>
-        <div
-          class="in-progress-card-container card-container"
-          id="inProgressCardContainer"
-        ></div>
+      <div class="form-container" id="formContainer">
+        <form class="card-form" id="cardForm">
+          <div class="form-container-1">
+            <input
+              class="form-name"
+              id="cardName"
+              type="text"
+              placeholder="Name*"
+              maxlength="15"
+              required
+            />
+            <input
+              class="form-priority"
+              id="cardPriority"
+              type="number"
+              placeholder="Priority*"
+              max="100"
+              min="1"
+              required
+            />
+            <select class="form-type" id="cardType" required>
+              <option value="">Type*</option>
+              <option>Feature</option>
+              <option>Enhancement</option>
+              <option>Bug</option>
+            </select>
+          </div>
+          <div class="form-container-2">
+            <textarea
+              class="form-description"
+              id="cardDescription"
+              placeholder="Describe your card..."
+              cols="30"
+              rows="4"
+            ></textarea>
+            <div class="form-buttons">
+              <button id="cancelButton" class="cancel-button">Cancel</button>
+              <button class="save-button" type="submit">Save</button>
+            </div>
+          </div>
+        </form>
       </div>
-      <div class="completed-container">
-        <h1>Completed</h1>
-        <div
-          class="completed-card-container card-container"
-          id="completedCardContainer"
-        ></div>
+      <div class="cards-container">
+        <div class="requested-container">
+          <div class="requested-container-heading">
+            <h1>Requested</h1>
+          </div>
+          <div
+            class="requested-card-container card-container"
+            id="requestedCardContainer"
+          ></div>
+        </div>
+        <div class="in-progress-container">
+          <div class="in-progress-container-heading">
+            <h1>In-progress</h1>
+          </div>
+          <div
+            class="in-progress-card-container card-container"
+            id="inProgressCardContainer"
+          ></div>
+        </div>
+        <div class="completed-container">
+          <div class="completed-container-heading">
+            <h1>Completed</h1>
+          </div>
+          <div
+            class="completed-card-container card-container"
+            id="completedCardContainer"
+          ></div>
+        </div>
       </div>
-    </div>
-    <script src="app.js"></script>
+      <script src="app.js"></script>
+    </section>
   </body>
 </html>

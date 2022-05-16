@@ -1,5 +1,0 @@
-data object id:{name,description,type,status}
-render cards using a single function (data){
-switch case for request complete and progress
-} 
-for button inside card change status of card
