@@ -3,6 +3,7 @@
   padding: 0;
   box-sizing: border-box;
 }
+/*    */
 
 body {
   font-family: Inter, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
@@ -292,6 +293,13 @@ button {
   animation: moveInLeft 0.5s;
 }
 
+.hide {
+  animation: moveInRight 1s;
+}
+
+.show-animation {
+}
+
 .overlay {
   position: fixed;
   width: 100%;
@@ -302,6 +310,22 @@ button {
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.7);
+}
+
+.dotted-border {
+  border: dotted 3px;
+}
+
+.feature {
+  color: #06ff00;
+}
+
+.enhancement {
+  color: #4b7be5;
+}
+
+.bug {
+  color: #ff1818;
 }
 
 @keyframes moveInLeft {

@@ -4,20 +4,38 @@ let cardDetails = document.querySelector("#cardDescription")
 let cardPriority = document.querySelector("#cardPriority")
 let cardType = document.querySelector("#cardType");
 let requestedCardContainer = document.querySelector("#requestedCardContainer")
+let requestedContainerNode = document.getElementById("requestedCardContainer")
 let inProgressCardContainer = document.querySelector("#inProgressCardContainer")
+let inprogressContainerNode = document.getElementById("inprogressCardContainer")
 let completedCardContainer = document.querySelector("#completedCardContainer")
+let completedContainerNode = document.getElementById("completedCardContainer")
 let sortCardElement = document.querySelector("#sortCards")
 let cancelButton = document.querySelector("#cancelButton")
 let taskButton = document.querySelector("#taskButton")
 let formContainer = document.querySelector("#formContainer")
 let overLayContainer = document.querySelector("#overlay")
 let cards = [];
-let count = 5;
+let count = 5; //Recheck the Logic
 let draggedItem;
-
+let cardParameters = {
+    cardStatus: {
+        requested: "requested",
+        inProgress: "in-progress",
+        completed: "completed"
+    },
+    cardType: {
+        feature: "Feature",
+        bug: "Bug",
+        enhancement: "Enhancement"
+    },
+    sortValue: {
+        ascending: "Low to High",
+        descending: "High to Low"
+    }
+}
 
 // creating default cards on  load using an API
-(function createRandomCards() {
+function createRandomCards() {
     fetch("https://627a01494a5ef80e2c11f7e9.mockapi.io/cards")
         .then(cardData => cardData.json())
         .then(cardData => {
@@ -25,12 +43,31 @@ let draggedItem;
                 cards.push(card) && sortCardElement.value ? sortCards() : createCard(card);
             });
         })
-})();
+};
+window.addEventListener("load", () => {
+    createRandomCards();
+})
+
+//displaying the form on click;
+taskButton.addEventListener("click", () => {
+    formContainer.classList.add("show")
+    overLayContainer.classList.add("overlay")
+})
+
+//hiding the form
+cancelButton.addEventListener("click", () => {
+    formContainer.classList.remove("show");
+    formContainer.classList.add("hide");
+    setTimeout(() => {
+        overLayContainer.classList.remove("overlay");
+    }, 500);
+})
+
 
 
 formCard.addEventListener("submit", (event) => {
     event.preventDefault();
-    formContainer.style.animation = "moveInRight 1s";
+    formContainer.classList.add("hide"); //bug
     formContainer.classList.remove("show");
     setTimeout(() => {
         overLayContainer.classList.remove("overlay");
@@ -81,47 +118,21 @@ function createCard(data) {
     displayCards(newCard, data.cardStatus)
     categorizeCards(newCard, data.cardType)
     highlightContainers(newCard)
+    return newCard
 }
 
-
-
-//highlighting the card containers when dragging
-function highlightContainers(newCard) {
-    newCard.addEventListener("dragstart", (e) => {
-        draggedItem = e.target;
-        switch (draggedItem.parentElement) {
-            case requestedCardContainer:
-                inProgressCardContainer.style.border = "dotted 3px"
-                break
-            case inProgressCardContainer:
-                requestedCardContainer.style.border = "dotted 3px"
-                completedCardContainer.style.border = "dotted 3px"
-                break
-            default:
-                break
-        }
-    })
-    newCard.addEventListener("dragend", () => {
-        requestedCardContainer.style.border = "none"
-        completedCardContainer.style.border = "none"
-        inProgressCardContainer.style.border = "none"
-
-    })
-}
-
-
-//displaying the cards
+//displaying the cards on respective containers
 function displayCards(card, cardStatus) {
     switch (cardStatus) {
-        case "requested": {
+        case cardParameters.cardStatus.requested: {
             requestedCardContainer.append(card);
             break;
         }
-        case "in-progress": {
+        case cardParameters.cardStatus.inProgress: {
             inProgressCardContainer.append(card);
             break;
         }
-        case "completed": {
+        case cardParameters.cardStatus.completed: {
             completedCardContainer.append(card)
         }
     }
@@ -131,19 +142,19 @@ function displayCards(card, cardStatus) {
 // differentiating the card according to type
 function categorizeCards(card, cardType) {
     switch (cardType) {
-        case "Feature": {
+        case cardParameters.cardType.feature: {
             card.classList.add("display-requested-card-type");
-            card.childNodes[1].childNodes[1].style.color = "#06ff00";
+            card.childNodes[1].childNodes[1].classList.add("feature")
             break;
         }
-        case "Enhancement": {
+        case cardParameters.cardType.enhancement: {
             card.classList.add("display-in-progress-card-type");
-            card.childNodes[1].childNodes[1].style.color = "#4b7be5";
+            card.childNodes[1].childNodes[1].classList.add("enhancement")
             break;
         }
-        case "Bug": {
+        case cardParameters.cardType.bug: {
             card.classList.add("display-completed-card-type");
-            card.childNodes[1].childNodes[1].style.color = "#ff1818";
+            card.childNodes[1].childNodes[1].classList.add("bug")
             break;
         }
     }
@@ -153,38 +164,55 @@ function categorizeCards(card, cardType) {
 // sorting the cards according to type
 function sortCards() {
 
-    if (sortCardElement.value === "Low to High") {
-        requestedCardContainer.innerHTML = ""
-        inProgressCardContainer.innerHTML = ""
-        completedCardContainer.innerHTML = ""
-        cards.sort((a, b) => {
-            return a.priority - b.priority;
-        })
-        cards.map(card => {
-            createCard(card)
-        })
-    }
-    else if (sortCardElement.value === "High to Low") {
-        requestedCardContainer.innerHTML = ""
-        inProgressCardContainer.innerHTML = ""
-        completedCardContainer.innerHTML = ""
-        cards.sort((a, b) => {
-            return b.priority - a.priority;
-        })
-        cards.map(card => createCard(card))
+    emptyContainers(requestedContainerNode)
+    emptyContainers(inProgressCardContainer)
+    emptyContainers(completedContainerNode)
+
+    sortCardElement.value === cardParameters.sortValue.ascending ? cards.sort((a, b) => {
+        return a.priority - b.priority
+    }) : cards.sort((a, b) => {
+        return b.priority - a.priority;
+    })
+
+    cards.map(card => {
+        createCard(card)
+    })
+}
+
+function emptyContainers(cardContainers) {
+    while (cardContainers.hasChildNodes()) {
+        cardContainers.removeChild(cardContainers.firstChild)
     }
 }
 sortCardElement.addEventListener("input", sortCards)
 
 
-
-
 // adding drag and drop functionality to cards
-requestedCardContainer.addEventListener("drop", dropCard);
-inProgressCardContainer.addEventListener("drop", dropCard);
-completedCardContainer.addEventListener("drop", dropCard);
 
+//highlighting the card containers when dragging
+function highlightContainers(newCard) {
+    newCard.addEventListener("dragstart", (e) => {
+        draggedItem = e.target;
+        switch (draggedItem.parentElement) {
+            case requestedCardContainer:
+                inProgressCardContainer.classList.add("dotted-border")
+                break
+            case inProgressCardContainer:
+                requestedCardContainer.classList.add("dotted-border")
+                completedCardContainer.classList.add("dotted-border")
+                break
+            default:
+                break
+        }
+    })
+    newCard.addEventListener("dragend", () => {
+        requestedCardContainer.classList.remove("dotted-border")
+        completedCardContainer.classList.remove("dotted-border")
+        inProgressCardContainer.classList.remove("dotted-border")
+    })
+}
 
+//Checking the authentication of the card while dragging over
 requestedCardContainer.addEventListener("dragover", e => {
     draggedItem.parentElement === inProgressCardContainer && e.preventDefault();
 })
@@ -195,47 +223,32 @@ completedCardContainer.addEventListener("dragover", e => {
     draggedItem.parentElement === inProgressCardContainer && e.preventDefault();
 })
 
+//dropping the card
+requestedCardContainer.addEventListener("drop", dropCard);
+inProgressCardContainer.addEventListener("drop", dropCard);
+completedCardContainer.addEventListener("drop", dropCard);
 
 function dropCard(e) {
     cards.map(value => {
-        if (value.id === +draggedItem.dataset.id) {
-            if (value.cardStatus === "requested" && e.target === inProgressCardContainer) {
-                draggedItem.remove();
-                value.cardStatus = "in-progress";
-                createCard(value);
-                sortCards();
+        if (+value.id === +draggedItem.dataset.id) {
+            debugger;
+            draggedItem.remove();
+            switch (value.cardStatus && e.target) {
+                case cardParameters.cardStatus.requested && inProgressCardContainer:
+                    value.cardStatus = cardParameters.cardStatus.inProgress
+                    break;
+                case cardParameters.cardStatus.inProgress && completedCardContainer:
+                    value.cardStatus = cardParameters.cardStatus.completed
+                    break;
+                case cardParameters.cardStatus.inProgress && requestedCardContainer:
+                    value.cardStatus = cardParameters.cardStatus.requested
+                    break;
+                default:
+                    return 0;
             }
-            else if (value.cardStatus === "in-progress" && e.target === completedCardContainer) {
-                draggedItem.remove();
-                value.cardStatus = "completed";
-                createCard(value);
-                sortCards();
-            }
-            else if (value.cardStatus === "in-progress" && e.target === requestedCardContainer) {
-                draggedItem.remove();
-                value.cardStatus = "requested";
-                createCard(value);
-                sortCards();
-            }
+            createCard(value);
+            sortCards();
         }
     })
 }
 
-
-//displaying the form on click;
-taskButton.addEventListener("click", (e) => {
-    formContainer.classList.add("show")
-    formContainer.style.animation = "moveInLeft .5s "
-    overLayContainer.classList.add("overlay")
-})
-
-
-//hiding the form
-cancelButton.addEventListener("click", function (e) {
-    e.preventDefault();
-    formContainer.style.animation = "moveInRight 1s"
-    formContainer.classList.remove("show");
-    setTimeout(() => {
-        overLayContainer.classList.remove("overlay");
-    }, 500);
-})
